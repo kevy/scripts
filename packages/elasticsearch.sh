@@ -15,17 +15,19 @@ ELASTICSEARCH_PORT=${ELASTICSEARCH_PORT:="9333"}
 ELASTICSEARCH_DIR=${ELASTICSEARCH_DIR:="$HOME/el"}
 ELASTICSEARCH_WAIT_TIME=${ELASTICSEARCH_WAIT_TIME:="30"}
 
-# The download location of version 2.x seems to follow a different URL structure to 1.x
+# The download location of version 5.x, and 2.x seems to follow a different URL structure to 1.x\
+# Make sure to use Oracle JDK 8 for Elasticsearch 5.x run the following commands in your script.
+# source $HOME/bin/jdk/jdk_switcher
+# jdk_switcher home oraclejdk8
+# jdk_switcher use oraclejdk8
 if [ ${ELASTICSEARCH_VERSION:0:1} -eq 5 ]
 then
-	ELASTICSEARCH_DL_URL="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
+  ELASTICSEARCH_DL_URL="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
+elif [ ${ELASTICSEARCH_VERSION:0:1} -eq 2 ]
+then
+  ELASTICSEARCH_DL_URL="https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ELASTICSEARCH_VERSION}/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
 else
-  if [ ${ELASTICSEARCH_VERSION:0:1} -eq 2 ]
-	then
-	  ELASTICSEARCH_DL_URL="https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ELASTICSEARCH_VERSION}/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
-	else
-    ELASTICSEARCH_DL_URL="https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
-	fi
+  ELASTICSEARCH_DL_URL="https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
 fi
 set -e
 
@@ -42,4 +44,4 @@ echo "path.scripts: ${pwd}/elasticsearch-scripts/" >> "${ELASTICSEARCH_DIR}/conf
 
 # Make sure to use the exact parameters you want for ElasticSearch and give it enough sleep time to properly start up
 nohup bash -c "${ELASTICSEARCH_DIR}/bin/elasticsearch 2>&1" &
-sleep "${ELASTICSEARCH_WAIT_TIME}"
+wget --retry-connrefused --tries=0 --waitretry=1 -O- -nv http://localhost:${ELASTICSEARCH_PORT}
