@@ -10,17 +10,22 @@
 # * ELASTICSEARCH_VERSION
 # * ELASTICSEARCH_PORT
 #
-ELASTICSEARCH_VERSION=${ELASTICSEARCH_VERSION:="2.1.1"}
+ELASTICSEARCH_VERSION=${ELASTICSEARCH_VERSION:="5.4.0"}
 ELASTICSEARCH_PORT=${ELASTICSEARCH_PORT:="9333"}
 ELASTICSEARCH_DIR=${ELASTICSEARCH_DIR:="$HOME/el"}
 ELASTICSEARCH_WAIT_TIME=${ELASTICSEARCH_WAIT_TIME:="30"}
 
 # The download location of version 2.x seems to follow a different URL structure to 1.x
-if [ ${ELASTICSEARCH_VERSION:0:1} -eq 2 ]
+if [ ${ELASTICSEARCH_VERSION:0:1} -eq 5 ]
 then
-  ELASTICSEARCH_DL_URL="https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ELASTICSEARCH_VERSION}/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
+	ELASTICSEARCH_DL_URL="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
 else
-  ELASTICSEARCH_DL_URL="https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
+  if [ ${ELASTICSEARCH_VERSION:0:1} -eq 2 ]
+	then
+	  ELASTICSEARCH_DL_URL="https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ELASTICSEARCH_VERSION}/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
+	else
+    ELASTICSEARCH_DL_URL="https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
+	fi
 fi
 set -e
 
