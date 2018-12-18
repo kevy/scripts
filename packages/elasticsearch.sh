@@ -42,6 +42,9 @@ echo 'script.engine.groovy.inline.aggs: on' >> "${ELASTICSEARCH_DIR}/config/elas
 pwd=$(pwd)
 echo "path.scripts: ${pwd}/elasticsearch-scripts/" >> "${ELASTICSEARCH_DIR}/config/elasticsearch.yml"
 
+${ELASTICSEARCH_DIR}/bin/elasticsearch-plugin install ingest-geoip
+${ELASTICSEARCH_DIR}/bin/elasticsearch-plugin install ingest-user-agent
+
 # Make sure to use the exact parameters you want for ElasticSearch and give it enough sleep time to properly start up
 nohup bash -c "${ELASTICSEARCH_DIR}/bin/elasticsearch 2>&1" &
 wget --retry-connrefused --tries=0 --waitretry=1 -O- -nv http://localhost:${ELASTICSEARCH_PORT}
